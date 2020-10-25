@@ -1,2 +1,2 @@
-python slide_transcript_merger.py %*
+python merger.py %*
 pause
