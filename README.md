@@ -10,4 +10,4 @@ Designed to aid in a class where Slides (PPTX) and Transcripts (PDF) could be do
 
 # Dependencies
 * PyPDF2 -- https://pypi.org/project/PyPDF2/
-* cloudmersive_convert_api_client -- https://api.cloudmersive.com/
+* cloudmersive_convert_api_client -- https://api.cloudmersive.com/ (Needs an API Key)
