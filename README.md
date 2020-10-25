@@ -11,3 +11,14 @@ Designed to aid in a class where Slides (PPTX) and Transcripts (PDF) could be do
 # Dependencies
 * PyPDF2 -- https://pypi.org/project/PyPDF2/
 * cloudmersive_convert_api_client -- https://api.cloudmersive.com/ (Needs an API Key)
+* glob -- Finds files using a pattern string
+
+# Setup
+* Install Python3
+
+* Use Pip to Install Packages
+  * pip install pypdf2
+  * pip install cloudmersive_convert_api_client
+  * pip install glob
+
+* Place batch file and python file in directory where folder containing PDF/PPTX files is. 
