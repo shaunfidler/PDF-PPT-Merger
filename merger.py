@@ -1,8 +1,6 @@
-from __future__ import print_function
 from PyPDF2 import PdfFileMerger
 import glob
 import sys
-import time
 import cloudmersive_convert_api_client
 from cloudmersive_convert_api_client.rest import ApiException
 import os
