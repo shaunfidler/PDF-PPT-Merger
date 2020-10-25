@@ -1,2 +1,2 @@
-# PDF-PPT-Merger
-Combines all of the PDF and PowerPoint Files in a directory together using a Python Script and Windows Batch Drop Target
+Python Script to Merge all PDF Files and PowerPoint Files found within a folder together, ending with a single file as FOLDERNAME.extension.
+This was to aid in a class where Slides (PPTX) and Transcripts (PDF) could be downloaded for each Module and used to learn/study the material.
