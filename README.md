@@ -22,7 +22,7 @@ Designed to aid in a class where Slides (PPTX) and Transcripts (PDF) could be do
 # Example File Structure:
 * ROOT DIRECTORY
   * Module 0x09  <-- Contains the PDFs or PPTXs that you want to merge
-  * merger.bat <-- Grab the 'Module 01' folder and drop it on this file to run the program
+  * merger.bat <-- Grab the 'Module 0x09' folder and drop it on this file to run the program
   * merger.py
   
 Once completed, the ending file will be 'Module 0x09\Module 0x09 Slides.pdf' if merging PPTXs or 'Module 0x09\Module 0x09 Transcripts.pdf' if merging PDFs. This can be customized in the python code.
