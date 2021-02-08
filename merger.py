@@ -1,101 +1,79 @@
+from __future__ import print_function
 from PyPDF2 import PdfFileMerger
 import glob
 import sys
-import cloudmersive_convert_api_client
-from cloudmersive_convert_api_client.rest import ApiException
+import time
 import os
+import comtypes.client
 
-def PDFMerge(files, outputName):
-	print("*** BEGINNING PDF MERGE ***")
-	#print(files)
-	#print(outputName)
+def PDFMerge(files, outputName, appender):
+    print("*** BEGINNING PDF MERGE ***")
+    #print(files)
+    #print(outputName)
 
-	# Merge the list of PDFs passed in (in order)
-	merger = PdfFileMerger()
-	for pdf in files:
-		merger.append(open(pdf, 'rb'))
+    merger = PdfFileMerger()
+    for pdf in files:
+        print(pdf)
+        merger.append(open(pdf, 'rb'))
+    filename = outputName.split('\\')
+    outputName = outputName + '\\' + filename[len(filename) - 1]
+    with open(outputName + ' ' + appender + '.pdf', 'wb') as fout:
+        merger.write(fout)
+    print("*** SUCCESSFUL PDF MERGE ***\n")
 
-	# Generate final PDF name
-	filename = outputName.split('\\')
-	outputName = outputName + '\\' + filename[len(filename) - 1]
+def initPPT():
+    powerpoint = comtypes.client.CreateObject("Powerpoint.Application")
+    powerpoint.Visible = 1
+    return powerpoint
+    
+def convertToPDF(files, powerpoint, pdfsToMerge):
+    for file in files:
+        outputFileName = file
+        formatType = 32
+        
+        if outputFileName[-3:] != 'pdf':
+            outputFileName = outputFileName + ".pdf"
+        deck = powerpoint.Presentations.Open(file)
 
-	# Write final PDF as <FOLDERNAME>.pdf
-	with open(outputName + '.pdf', 'wb') as fout:
-		merger.write(fout)
-	print("*** SUCCESSFUL PDF MERGE ***\n")
-
-def PPTMerger(files, outputName):
-	print("*** BEGINNING PPTX MERGE ***")
-	apiKey = 'API KEY HERE'
-	#print(files)
-	#print(outputName)
-
-	# Start building filename to be FolderName
-	filename = outputName.split('\\')
-	filename = outputName + '\\' + filename[len(filename) - 1]
-
-	# Configure API key authorization: Apikey
-	configuration = cloudmersive_convert_api_client.Configuration()
-	configuration.api_key['Apikey'] = apiKey
-
-	# Create an instance of the API class
-	api_instance = cloudmersive_convert_api_client.MergeDocumentApi(cloudmersive_convert_api_client.ApiClient(configuration))
-
-	try:
-		# Merge first two PPTXs to start the process
-		api_response = api_instance.merge_document_pptx_multi(files[0], files[1])
-		with open(outputName + '\\tmp1.pptx', 'wb') as fout:
-			fout.write(api_response)
-		
-		# Use temporary PPTXs to merge remaining PPTXs all into a single file, using the previous merge each time (MERGED.pptx + next.pptx)
-		for i in range(2, len(files)):
-			# Merge with previous temporary pptx
-			api_response = api_instance.merge_document_pptx_multi(outputName + '\\tmp{}.pptx'.format(i - 1), files[i])
-			with open(outputName + '\\tmp{}.pptx'.format(i), 'wb') as fout:
-				fout.write(api_response)
-
-		# Save final merge as '<FOLDERNAME>.pptx'
-		with open(filename + '.pptx', 'wb') as fout:
-			fout.write(api_response)
-		removeFiles = glob.glob(outputName + '\\tmp*.pptx')
-
-		# Remove temporary files used during merging
-		for f in removeFiles:
-			os.remove(f)
-		print("*** SUCCESSFUL PPTX MERGE ***")
-	except ApiException as e:
-		print("Exception when calling MergeDocumentApi->merge_document_pptx: %s\n" % e)
+        deck.SaveAs(outputFileName, formatType) # formatType = 32 for ppt to pdf
+        deck.Close()
+        pdfsToMerge.append(outputFileName)
+        print("DONE WITH: " + outputFileName)
 
 def FindFiles(directory, pdf, ppt):
-	if(pdf):
-		pdfs = glob.glob(directory + "\\*.pdf")
-		PDFMerge(pdfs, directory)
-	if(ppt):
-		ppts = glob.glob(directory + "\\*.pptx")
-		PPTMerger(ppts, directory)
+    if(pdf):
+        pdfs = glob.glob(directory + "\\*.pdf")
+        PDFMerge(pdfs, directory, 'Transcripts')
+    if(ppt):
+        ppts = glob.glob(directory + "\\*.pptx")
+        pdfsToMerge = []
+        powerpoint = initPPT()
+        convertToPDF(ppts, powerpoint, pdfsToMerge)
+        powerpoint.Quit()
+        PDFMerge(pdfsToMerge, directory, 'Slides')
 
 def main():
-	directory = sys.argv[1]
-	print("**********************************")
-	print("MENU:")
-	print("Type 1 for PDF and PPTX Merge")
-	print("Type 2 for PDF Merge Only")
-	print("Type 3 for PPTX Merge Only")
-	print("**********************************")
-	choice = input()
-	pdf = True
-	ppt = True
-	if(choice == '1'):
-		FindFiles(directory, pdf, ppt)
-	elif(choice == '2'):
-		ppt = False
-		FindFiles(directory, pdf, ppt)
-	elif(choice == '3'):
-		pdf = False
-		FindFiles(directory, pdf, ppt)
-	else:
-		print("Bad Input -- Relaunching Menu")
-		main()
+    directory = sys.argv[1]
+    print("**********************************")
+    print("MENU:")
+    print("Type 1 for PDF and PPTX Merge")
+    print("Type 2 for PDF Merge Only")
+    print("Type 3 for PPTX Merge Only")
+    print("**********************************")
+    choice = input()
+    pdf = True
+    ppt = True
+    if(choice == '1'):
+        FindFiles(directory, pdf, ppt)
+    elif(choice == '2'):
+        ppt = False
+        FindFiles(directory, pdf, ppt)
+    elif(choice == '3'):
+        pdf = False
+        FindFiles(directory, pdf, ppt)
+    else:
+        print("Bad Input -- Relaunching Menu")
+        main()
 
 if __name__ == "__main__":
-	main()
+    main()
