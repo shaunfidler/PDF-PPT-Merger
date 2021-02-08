@@ -10,7 +10,6 @@ Designed to aid in a class where Slides (PPTX) and Transcripts (PDF) could be do
 
 # Dependencies
 * PyPDF2 -- https://pypi.org/project/PyPDF2/
-* cloudmersive_convert_api_client -- https://api.cloudmersive.com/ (Needs an API Key)
 * glob -- Finds files using a pattern string
 
 # Setup
@@ -22,3 +21,11 @@ Designed to aid in a class where Slides (PPTX) and Transcripts (PDF) could be do
   * pip install glob
 
 * Place batch file and python file in directory where folder containing PDF/PPTX files is. 
+
+# Example File Structure:
+* ROOT DIRECTORY
+  * Module 01  <-- Contains the PDFs or PPTXs that you want to merge
+  * merger.bat <-- Grab the 'Module 01' folder and drop it on this file to run the program
+  * merger.py
+  
+Once completed, the ending file will be 'Module 01\Module 01 Slides.pdf' if merging PPTXs or 'Module 01\Module 01 Transcripts.pdf' if merging PDFs. This can be customized in the python code.
