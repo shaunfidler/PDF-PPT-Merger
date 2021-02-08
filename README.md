@@ -10,14 +10,12 @@ Designed to aid in a class where Slides (PPTX) and Transcripts (PDF) could be do
 
 # Dependencies
 * PyPDF2 -- https://pypi.org/project/PyPDF2/
-* glob -- Finds files using a pattern string
 
 # Setup
 * Install Python3
 
 * Use Pip to Install Packages
   * pip install pypdf2
-  * pip install glob
 
 * Place batch file and python file in directory where the folder containing PDF/PPTX files is (An example structure is shown below).
 
