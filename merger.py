@@ -1,5 +1,5 @@
 from __future__ import print_function
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfMerger
 import glob
 import sys
 import time
@@ -11,7 +11,7 @@ def PDFMerge(files, outputName, appender):
     #print(files)
     #print(outputName)
 
-    merger = PdfFileMerger()
+    merger = PdfMerger()
     for pdf in files:
         print(pdf)
         merger.append(open(pdf, 'rb'))
